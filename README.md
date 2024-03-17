@@ -1,4 +1,4 @@
-# Database_Mining_BirdStrike_Incidents
+# Database_Mining
 
 ## [15 hrs] BUILD: Practicum II / Mine a Database
 Due May 3, 2022 by 11:59pm Points 100 Submitting a file upload File Types rmd Available until May 5, 2022 at 11:59pm
