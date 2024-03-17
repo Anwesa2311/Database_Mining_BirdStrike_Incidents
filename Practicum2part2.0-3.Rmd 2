@@ -1,0 +1,101 @@
+---
+title: "DO: Practicum II / Mine a Database"
+output: html_notebook
+Authors: Anwesa Basu (basu.anw@northeastern.edu), Swapnendu Majumdar (majumdar.s@northeastern.edu)
+---
+
+Create a MySQL database using either a local or a cloud MySQL instance. Connect to the database. If you use SQLite for this step, no credit will be awarded for this question.
+```{r}
+# 1. Library
+
+if("RMySQL" %in% rownames(installed.packages()) == FALSE) {
+install.packages("RMySQL")
+}
+if("DBI" %in% rownames(installed.packages()) == FALSE) {
+install.packages("DBI")
+}
+if("sqldf" %in% rownames(installed.packages()) == FALSE) {
+install.packages("sqldf")
+}
+if("RMySQL" %in% rownames(installed.packages()) == FALSE) {
+install.packages("RMySQL")
+}
+  
+if("ggplot2" %in% rownames(installed.packages()) == FALSE) {
+install.packages("ggplot2")
+}
+
+library(RMySQL)
+library(DBI)
+
+
+#2. Settings
+
+db_user <- 'anwesa2311'
+db_password <- 'anwesa2311'
+db_name <- 'sys'
+db_host <- 'localhost'#'db4free.net'#'127.0.0.1'#'localhost'#'db4free.net'#'LAPTOP-NMMF9RVC'
+db_port <- 3306
+
+mydb <- dbConnect(RMySQL::MySQL(), user = db_user, password = db_password, dbname = db_name, host = db_host, port = db_port)
+```
+
+```{sql connection=mydb}
+drop table if exists Author_fact ;
+
+```
+
+Creating the start schema fact table named Author_fact
+
+```{sql connection=mydb}
+CREATE TABLE Author_fact (
+AuthorID int,
+FirstName varchar(255),
+LastName varchar(255),
+Initial varchar(255),
+avg_articles_published int,
+total_books_published int);
+
+```
+
+Connecting to the sqlite database created by the first part of this project
+```{r}
+library(RSQLite)
+library(DBI)
+
+dbfile = "newDB.sqlite"
+dbcon <- dbConnect(RSQLite::SQLite(), paste0(dbfile))
+```
+
+
+populating the fact table with the required data
+```{r}
+rs1 <- dbGetQuery(dbcon,"select sub.a as AuthorID,sub.f as FirstName,sub.l as Lastname,sub.i as Initial,avg(sub.count) as 'avg_articles_published',sum(sub.count) as 'total_articles_published' from(
+select count(a1.PMID) as count,year as y,a2.id as a,a2.FirstName as f, a2.LastName as l,a2.initials as i  from PublicationDate P join journals j on p.id=j.DateID join articles a on j.id=a.JournalID join 
+authorarticle a1 on a.PMID=a1.PMID join authors a2 on a1.AID=a2.id group by a2.id,year)
+as sub group by 1 order by 2
+");
+dbDisconnect(dbcon)
+dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
+dbWriteTable(mydb, value = rs1, name = "author_fact",overwrite= TRUE, row.names = FALSE)
+```
+
+Displaying the details from the author_fact table from MySQL database, which has been populated using data from the SQLite database. We can see that the fact table has all the facts related to the author, which consist of AuthorID, FirstName, LastName and Initial. The following measures have also been added to the fact table -
+
+1. Average articles published per author per year (Column : avg_articles_published )
+2. Total number of articles published per author (Column : total_articles_published )
+
+```{sql connection=mydb}
+
+Select * from author_fact order by 1;
+
+```
+
+Displaying the top 10 author details from the author_fact table in terms of total number of articles published
+
+```{sql connection=mydb}
+
+SELECT distinct FirstName,LastName,Initial,total_articles_published,avg_articles_published FROM author_fact ORDER BY total_articles_published  desc limit 10 ;
+
+```
+
