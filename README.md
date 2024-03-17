@@ -1,19 +1,19 @@
-## Database_Mining_BirdStrike_Incidents
+# Database_Mining_BirdStrike_Incidents
 
-# [15 hrs] BUILD: Practicum II / Mine a Database
+## [15 hrs] BUILD: Practicum II / Mine a Database
 Due May 3, 2022 by 11:59pm Points 100 Submitting a file upload File Types rmd Available until May 5, 2022 at 11:59pm
 This assignment was locked May 5, 2022 at 11:59pm.
 
-# Motivation
+## Motivation
 In this practicum you will extract data from an XML document and then store the data relationally in a SQLite database. That database represents a "transactional" database. Then you will extract data from the transactional database and create an "analytical" database using a star schema in MySQL. Finally, you will query facts from the MySQL analytical database. This will require that you connect to two different databases simultaneously -- a common occurrence in practice.
 
-# Format
+## Format
 Method: Individual or in pairs (two)
 Materials: RStudio or RStudio.cloud; SQLite; MySQL (optional)
 
 Before you begin, download the PubMed catalog (pubmed_sample.xml Download pubmed_sample.xml), save the XML file locally in the same folder as your R Notebook, and then inspect the file to familiarize yourself with its content and structure. 
 
-# Part 1 (40 pts) Load XML
+## Part 1 (40 pts) Load XML
 In Part 1 you create a normalized relational OLTP database and populate it with data from an XML document. In Part 2 you will add to the normalized schema fact tables and turn the normalized schema into a denormalized schema suitable for OLAP. In Part 3 you'll use the OLAP star/snowflake schema to do some (simple) data mining. The parenthesis contain the maximum number of points that can be earned for that question and an estimate of the time in hours.
 
 (0 pts / 0.1 hrs) Create an R Notebook for Part 1; Part 2 will be done in a different notebook.
@@ -25,7 +25,7 @@ In Part 1 you create a normalized relational OLTP database and populate it with 
 (25 pts / 4 hrs) Extract and transform the data from the XML and then load into the appropriate tables in the database. You cannot (directly and solely) use xmlToDataFrame but instead must parse the XML using a combination of node-by-node tree traversal and XPath. It is not feasible to use XPath to extract all journals, then all authors, etc. as some are missing and won't match up. You will need to iterate through the top-level nodes. While outside the scope of the course, this task could also be done through XSLT. Do not store duplicate authors or journals. For dates, you need to devise a conversion scheme, document your decision, and convert all dates to your encoding scheme. Links to an external site.Use the appropriate tag for publication date. See this linkLinks to an external site. for information.
 
 
-# Part 2 (40 pts) Create Star/Snowflake Schema
+## Part 2 (40 pts) Create Star/Snowflake Schema
 
 (0 pts / 0.1 hrs) Create a new R Notebook for Part 2.
 
@@ -35,7 +35,7 @@ In Part 1 you create a normalized relational OLTP database and populate it with 
 
 
 
-# Part 3 (20 pts) Explore and Mine Data
+## Part 3 (20 pts) Explore and Mine Data
 
 (20 pts / 4 hrs) Write queries using your MySQL data warehouse to populate a fictitious dashboard that would allow an analyst to explore whether the number of publications show a seasonal pattern or to understand more about the publication cycle. We will, of course, not implement this dashboard fully; we'll focus on just one possible panel: the top authors. So, to test your fact table by writing a query that finds the top ten authors in terms of numbers of publications. If, for some reason, you need to update the fact table, document your changes and your reasons why the changes are needed. This requires thinking and creativity -- there is not a single best solution.  If you use SQLite for this step, maximum half the credit will be awarded for this question. Do not use any SQL GROUP BY or COUNT(*) statement -- the "facts" should already be in your tables.
 
